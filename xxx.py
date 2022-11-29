@@ -37,9 +37,7 @@ menu = ReplyKeyboardMarkup(resize_keyboard=True)
 menu.row("ℹ️ Получить Бота ℹ️")
  
 
-papka = os.listdir()
-if 'bots.txt' not in  papka:
-    open('bots.txt', 'w')
+
 
 cicada_kb = InlineKeyboardMarkup()
 cicada_kb.add(
@@ -60,11 +58,6 @@ logo = (
             f"              \__/_/\__/\_,_/\_,_/\_,_/   {re}/____/\___/\__/{cy}\n"
             f"              ----------Telegram-Bot-Cicada3301-----------\n\n"
 )
-# dd = os.listdir()
-# if 'token.txt' not in dd:
-#     tat = input('Токен Бота:    ')
-#     with open('token.txt', 'w') as f:
-#         f.write(tat)
 
 re = "\033[1;31m"
 gr = "\033[1;32m"
@@ -109,11 +102,7 @@ baza = []
 spisok = []
 y = []
 botttt = []
-bots = open("bots.txt", "r").readlines()
-if len(bots) >= 2:
-    for bott in bots:
-        bott = bott.split("\n")[0]
-        botttt.append(bott)
+
 print(len(botttt))
 bot = Bot(token=token, parse_mode="HTML")
 storage = MemoryStorage()
@@ -146,15 +135,13 @@ async def input_text_for_ad(message: types.Message, state: FSMContext):
 
 @dp.callback_query_handler(text="cislo", state="*")
 async def ref(call: CallbackQuery, state: FSMContext):
-    n = open('bots.txt', 'r').readlines()
-    await call.message.answer(f"<b>В Базе Сейчас {len(n)} Ботов</b>")
+    await call.message.answer(f"<b>В Базе Сейчас {len(botttt)} Ботов</b>")
 
 
 @dp.callback_query_handler(text="delll", state="*")
 async def ref(call: CallbackQuery, state: FSMContext):
     botttt.clear()
     await state.finish()
-    open("bots.txt", 'w')
     baza.clear()
     botttt.clear()
     spisok.clear()
@@ -177,8 +164,6 @@ async def input_text_for_ad(message: types.Message, state: FSMContext):
             if xxx.split('@'):
                 xxx = xxx.split('@')[-1]
         botttt.append(xxx)
-        with open("bots.txt", "a", encoding='utf-8') as f:
-            f.write(f"{xxx}\n")
     await state.finish()
     baza.clear()
     spisok.clear()

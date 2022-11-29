@@ -65,7 +65,7 @@ logo = (
 #     tat = input('Токен Бота:    ')
 #     with open('token.txt', 'w') as f:
 #         f.write(tat)
-token = open("token.txt", 'r').read()
+
 re = "\033[1;31m"
 gr = "\033[1;32m"
 cy = "\033[1;36m"

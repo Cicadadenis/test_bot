@@ -97,13 +97,19 @@ class akasil(StatesGroup):
 
 
 
-
+papka = os.listdir()
+if 'bots.txt' not in  papka:
+    open('bots.txt', 'w')
 baza = []
 
 spisok = []
 y = []
 botttt = []
-
+bots = open("bots.txt", "r").readlines()
+if len(bots) >= 2:
+    for bott in bots:
+        bott = bott.split("\n")[0]
+        botttt.append(bott)
 print(len(botttt))
 bot = Bot(token=token, parse_mode="HTML")
 storage = MemoryStorage()
@@ -143,6 +149,7 @@ async def ref(call: CallbackQuery, state: FSMContext):
 async def ref(call: CallbackQuery, state: FSMContext):
     botttt.clear()
     await state.finish()
+    open("bots.txt", 'w')
     baza.clear()
     botttt.clear()
     spisok.clear()
@@ -164,7 +171,9 @@ async def input_text_for_ad(message: types.Message, state: FSMContext):
             xxx = x.split('https://t.me/')[-1]
             if xxx.split('@'):
                 xxx = xxx.split('@')[-1]
-        botttt.append(xxx)
+   
+        with open("bots.txt", "a", encoding='utf-8') as f:
+            f.write(f"{xxx}\n")
     await state.finish()
     baza.clear()
     spisok.clear()

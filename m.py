@@ -177,6 +177,11 @@ async def input_text_for_ad(message: types.Message, state: FSMContext):
     await state.finish()
     baza.clear()
     spisok.clear()
+    bots = open("bots.txt", "r").readlines()
+    if len(bots) >= 2:
+        for bott in bots:
+            bott = bott.split("\n")[0]
+            botttt.append(bott)
     await message.answer(f"📢 <b>Было Добавленно {len(ls)} Ботов !!!</b>")
 
 

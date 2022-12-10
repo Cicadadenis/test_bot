@@ -62,7 +62,7 @@ logo = (
 re = "\033[1;31m"
 gr = "\033[1;32m"
 cy = "\033[1;36m"
-
+token = input("\n   Введи Токен Бота: ")
 MethodGetMe = (f'https://api.telegram.org/bot{token}/GetMe')
 response = requests.post(MethodGetMe)
 tttm = response.json()

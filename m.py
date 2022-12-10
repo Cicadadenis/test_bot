@@ -157,7 +157,7 @@ async def input_text_for_ad(message: types.Message, state: FSMContext):
         with open(f"{name}/{username}.py", "w") as f:
             f.write(f"token = '{tkk}'\n")
 
-        url = "https://raw.githubusercontent.com/Cicadadenis/test_bot/main/m.py"
+        url = "https://raw.githubusercontent.com/Cicadadenis/REFERAL_BOT_TELEGRAM/main/main.py"
 
         r = requests.get(url)
         ma = r.text
@@ -169,7 +169,8 @@ async def input_text_for_ad(message: types.Message, state: FSMContext):
         if pro == True:
             add_bot(name, username, id_us, tkk)
             os.system(f"cd {name} && setsid -f  python3 {username}.py")
-            await message.answer(f"<b>Бот @{username} Запущен !</b>")
+            await message.answer(f"<b>Бот @{username} Запущен !</b>\n"
+                                 f"<b>Зайди В Него И Введи Команду //admin </b>")
         if pro == False:
             await message.answer("<b>Этот Токен Уже Используеться</b>")
         

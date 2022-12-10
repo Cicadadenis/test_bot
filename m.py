@@ -233,4 +233,6 @@ async def ref(call: CallbackQuery, state: FSMContext):
     await cicada.boti2.set()
 
 if __name__ == '__main__':
+    os.system("clear")
+    print("\n\n\n\n             Бот Запущен !!!!")
     executor.start_polling(dp, skip_updates=True)

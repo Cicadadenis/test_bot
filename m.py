@@ -17,7 +17,7 @@ from aiogram.utils.exceptions import BadRequest
 from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from rich.logging import RichHandler
-
+import sqlite3
 import random
 from pathlib import Path
 from os.path import exists
@@ -32,231 +32,204 @@ import sys
 import re
 from aiogram.types import ReplyKeyboardMarkup
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, inline_keyboard
+import requests
+
+
 
 menu = ReplyKeyboardMarkup(resize_keyboard=True)
-menu.row("ℹ️ Получить Бота ℹ️")
- 
-
-
-
-cicada_kb = InlineKeyboardMarkup()
-cicada_kb.add(
-    InlineKeyboardButton('➕ Добавить Ботов', callback_data='addd'),
-    InlineKeyboardButton('➖ Удалить Ботов', callback_data='delll'),
-    InlineKeyboardButton('❓ Сколько Ботов ?', callback_data='cislo')
-)
-
-
-re = "\033[1;31m"
-gr = "\033[1;32m"
-cy="\033[1;36m"
-
-logo = (
-            f"                    _             __         {re}___       __{cy}\n"
-            f"               ____(_)______ ____/ /__ _____{re}/ _ )___  / /_{cy}\n"
-            f"              / __/ / __/ _ `/ _  / _ `/___{re}/ _  / _ \/ __/{cy}\n"
-            f"              \__/_/\__/\_,_/\_,_/\_,_/   {re}/____/\___/\__/{cy}\n"
-            f"              ----------Telegram-Bot-Cicada3301-----------\n\n"
-)
-
-re = "\033[1;31m"
-gr = "\033[1;32m"
-cy = "\033[1;36m"
-token = input("\n   Введи Токен Бота: ")
-MethodGetMe = (f'https://api.telegram.org/bot{token}/GetMe')
-response = requests.post(MethodGetMe)
-tttm = response.json()
-tk = tttm['ok']
-if tk == True:
-    id_us = (tttm['result']['id'])
-    first_name = (tttm['result']['first_name'])
-    username = (tttm['result']['username'])
-    uurl = f"https://t.me/{username}"
-    os.system('cls')
-    print(logo)
-
-    print(f"""
-                ---------------------------------
-                🆔 Bot id: {id_us}
-                ---------------------------------
-                👤 Имя Бота: {first_name}
-                ---------------------------------
-                🗣 username: {username}
-                ---------------------------------
-                ******* Suport: @Satanasat ******
-    """)
-
+menu.row("ℹ️ Создать Бота ℹ️", "ℹ️ Мои Боты ℹ️")
 class cicada(StatesGroup):
     sms = State()
-
-class akasil(StatesGroup):
-    sms_text = State()
-    search = State()
-    urlses = State()
-    parser = State()
+    boti = State()
+    boti2 = State()
 
 
 
-papka = os.listdir()
-if 'bots.txt' not in  papka:
-    open('bots.txt', 'w')
-baza = []
-
-spisok = []
-y = []
-botttt = []
-bots = open("bots.txt", "r").readlines()
-if len(bots) >= 2:
-    for bott in bots:
-        bott = bott.split("\n")[0]
-        botttt.append(bott)
-print(len(botttt))
+token = input("\n     Введи Токен Бота: ")
 bot = Bot(token=token, parse_mode="HTML")
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
 
-
-
-@dp.message_handler(text="tram", state="*")
-async def tram(message: types.Message, state: FSMContext):
-    exit(1)
-
-@dp.message_handler(text="//admin", state="*")
-async def adm(message: types.Message, state: FSMContext):
-    await message.answer(f"📢 <b>Меню Администратора !!!</b>", reply_markup=cicada_kb)
-    await state.finish()
-
-privet = []
-@dp.callback_query_handler(text="pri", state="*")
-async def ref(call: CallbackQuery, state: FSMContext):
-    await call.message.answer("<b>Введи Новое Приветствие</b>")
-    await akasil.parser.set()
-
-
-@dp.message_handler(state=akasil.parser)
-async def input_text_for_ad(message: types.Message, state: FSMContext):
-    ff = message.text
-    await message.answer(ff)
-
-
-
-@dp.callback_query_handler(text="cislo", state="*")
-async def ref(call: CallbackQuery, state: FSMContext):
-    await call.message.answer(f"<b>В Базе Сейчас {len(botttt)} Ботов</b>")
-
-
-@dp.callback_query_handler(text="delll", state="*")
-async def ref(call: CallbackQuery, state: FSMContext):
-    botttt.clear()
-    await state.finish()
-    open("bots.txt", 'w')
-    baza.clear()
-    botttt.clear()
-    spisok.clear()
-    await call.message.answer("📢 <b>Список Ботов Очищен !!!</b>")
-
-@dp.callback_query_handler(text="addd", state="*")
-async def ref(call: CallbackQuery, state: FSMContext):
-    await state.finish()
-    await call.message.answer("📢 <b>Введите Список Юзиков Каждый С Новой Строки:</b>")
-    await akasil.sms_text.set()
-
-@dp.message_handler(state=akasil.sms_text)
-async def input_text_for_ad(message: types.Message, state: FSMContext):
-    ff = message.text
-    ls = ff.split('\n')
-    botttt.clear()
-    for x in ls:
-        if x.split('https://t.me/'):
-            xxx = x.split('https://t.me/')[-1]
-            if xxx.split('@'):
-                xxx = xxx.split('@')[-1]
-   
-        with open("bots.txt", "a", encoding='utf-8') as f:
-            f.write(f"{xxx}\n")
-    await state.finish()
-    baza.clear()
-    spisok.clear()
-    bots = open("bots.txt", "r").readlines()
-    if len(bots) >= 2:
-        for bott in bots:
-            bott = bott.split("\n")[0]
-            botttt.append(bott)
-    await message.answer(f"📢 <b>Было Добавленно {len(ls)} Ботов !!!</b>")
-
-
-
-async def nowi(message):
-
-    chat_id = message.chat.id
-    if len(botttt) >= 1:
-        while True: 
-            msg = random.choice(botttt)
-            
-            r = requests.get(f'https://t.me/{msg}')
-            
-            if '<i class="tgme_icon_user"></i>' not in r.text:
-                
-                baza.append(chat_id)
-                do_spiska = f"{chat_id}:{msg}"
-                spisok.append(do_spiska)
-                        
-                sss = await message.answer(f"<b>✳️ Привет {message.from_user.first_name} ✳️</b>\n\n"
-                                    f"➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖\n"
-                                    f"<b>Вот твой Бот: <a href='http://t.me/{msg}'>@{msg}</a></b>\n\n"
-                                    f"➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖\n"
-                                    f"<b>Если Тот Умрет Вернись Сюда И Получишь Новый:</b>", reply_markup=menu)
-                await bot.pin_chat_message(chat_id = message.chat.id, message_id = sss.message_id)
-                break
-    else:
-        await message.answer("<b>Боты Скоро Появяться</b>", reply_markup=menu)
-
-async def starii(message):
-
-    chat_id = message.chat.id
-    for x in spisok:
-        xx = int(x.split(':')[0])
-
-        if xx == chat_id:
-            msg = x.split(":")
-        
-            
-            r = requests.get(f'https://t.me/{msg[1]}')
-        
-            if '<i class="tgme_icon_user"></i>' not in r.text:
-
-                ms = msg[1]
-                baza.append(chat_id)
-                do_spiska = f"{chat_id}:{ms}"
-                spisok.append(do_spiska)
-                await message.answer(f"<b>✳️ Привет {message.from_user.first_name} ✳️</b>\n\n"
-                                    f"➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖\n"
-                                    f"<b>твой Бот: <a href='http://t.me/{ms}'>@{ms}</a> Жив</b>\n\n"
-                                    f"➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖\n"
-                                    f"<b>Если Тот Умрет Вернись Сюда И Получишь Новый:</b>", reply_markup=menu)
-                break
-            else:
-
-                task1 = asyncio.create_task(nowi(message))
-                await task1
-
-
-ps = []
-@dp.message_handler(text='ℹ️ Получить Бота ℹ️', state="*")
 @dp.message_handler(commands=['start'], state="*")
 async def show_contact(message: types.Message, state: FSMContext):
-    
     chat_id = message.chat.id
-    if chat_id in baza:
-        task2 = asyncio.create_task(starii(message))
-        await task2
-    if chat_id not in baza:
-        task1 = asyncio.create_task(nowi(message))
-        await task1
+    name = message.chat.first_name
+    await message.answer(f"<b>Привет {name} !</b>", reply_markup=menu)
 
-            
 
+    
+@dp.message_handler(text="ℹ️ Мои Боты ℹ️", state="*")
+async def bot_add(message: types.Message, state: FSMContext):
+    chat_id = message.chat.id
+    username = message.chat.username
+    bb = 'mur_site_edit_bot'
+    boti = get_bots(username)
+    if boti == False:
+        await message.answer("<b>У Тебя Нет Еще Созданных Ботов</b>")
+    else:
+        # print(boti)
+        # if bb in boti:
+        #     print("est")
+        # else:
+        #     print("net")
+        if len(boti) >= 1:
+            klava = InlineKeyboardMarkup()
+            for x in boti:
+                klava.add(InlineKeyboardButton(x, callback_data=x))
+            await message.answer('<b>Твои Боты</b>', reply_markup=klava)
+            await cicada.boti.set()
+        else:
+            await message.answer("<b>У Тебя Нет Еще Созданных Ботов</b>")
+
+
+
+
+
+@dp.message_handler(text="ℹ️ Создать Бота ℹ️", state="*")
+async def bot_add(message: types.Message, state: FSMContext):
+    chat_id = message.chat.id
+    username = message.chat.username
+    # get_files_user(username)
+    await message.answer("<b>Отправь Мне Токен Бота</b>")
+    await cicada.sms.set()
+
+
+
+def check_db(username):
+    databaseFile = ("data.db")
+    db = sqlite3.connect(databaseFile, check_same_thread=False)
+    cursor = db.cursor()
+    try:
+        cursor.execute(f"SELECT * FROM {username}")
+    except sqlite3.OperationalError:
+        cursor.execute(f"CREATE TABLE {username}(username TEXT, id TEXT, token TEXT)")
+
+def get_bots(username):
+    db = sqlite3.connect('data.db', check_same_thread=False)
+    cursor = db.cursor()
+    try:
+        cursor.execute(f"SELECT username FROM {username}")
+        fileIDs = cursor.fetchall()
+        bott = []
+        for x in fileIDs:
+            bott.append(x[0])
+        return bott
+    except:
+        return False
+
+def get_files_user(name, username):
+    db = sqlite3.connect('data.db', check_same_thread=False)
+    cursor = db.cursor()
+    cursor.execute(f"SELECT username FROM {name}")
+    fileIDs = cursor.fetchall()
+    bott = []
+    for x in fileIDs:
+        bott.append(x[0])
+    if username in bott:
+        return False
+    if username not in bott:
+        return True
+
+
+def add_bot(name, username, id_us, tkk):
+    db = sqlite3.connect('data.db', check_same_thread=False)
+    cursor = db.cursor()
+    data = [username, id_us, tkk]
+    cursor.execute(f'''INSERT INTO {name}(username, id, token) VALUES(?,?,?)''', data)
+    db.commit()
+
+@dp.message_handler(state=cicada.sms)
+async def input_text_for_ad(message: types.Message, state: FSMContext):
+    name = message.chat.username
+    tkk = message.text
+    await state.finish()
+    
+    MethodGetMe = (f'''https://api.telegram.org/bot{tkk}/GetMe''')
+    response = requests.post(MethodGetMe)
+    tttm = response.json()
+    tk = tttm['ok']
+    bt = 5739769545
+    if tk == True:
+        username = (tttm['result']['username'])
+        id_us = (tttm['result']['id'])
+        print(id_us)
+        os.system(f"mkdir {name}")
+        with open(f"{name}/{username}.py", "w") as f:
+            f.write(f"token = '{tkk}'\n")
+
+        url = "https://raw.githubusercontent.com/Cicadadenis/test_bot/main/m.py"
+
+        r = requests.get(url)
+        ma = r.text
+        with open(f"{name}/{username}.py", "a") as h:
+            h.write(str(ma))
+
+        check_db(name)
+        pro = get_files_user(name, username)
+        if pro == True:
+            add_bot(name, username, id_us, tkk)
+            os.system(f"cd {name} && setsid -f  python3 {username}.py")
+            await message.answer(f"<b>Бот @{username} Запущен !</b>")
+        if pro == False:
+            await message.answer("<b>Этот Токен Уже Используеться</b>")
+        
+        
+    else:
+        await message.answer(f"<b>Токен Не Валидный !</b>")
+def bbboot(name, bo):
+    db = sqlite3.connect('data.db', check_same_thread=False)
+    cursor = db.cursor()
+    cursor.execute(f"SELECT *  FROM {name} ")
+    fileIDs = cursor.fetchall()
+    for x in fileIDs:
+        if bo in x:
+            return x[1]
+def dead_bot(name, bo):
+    db = sqlite3.connect('data.db', check_same_thread=False)
+    cursor = db.cursor()
+    cursor.execute(f"DELETE FROM {name} WHERE username= '{bo}' ")
+    db.commit()
+
+@dp.callback_query_handler(state=cicada.boti2)
+async def b2(call: CallbackQuery, state: FSMContext):
+    name = call.message.chat.username
+    bo = call.data
+    username = bo.split(':')[0]
+    if bo.split(':')[1] == "stop":
+        os.system("ps -x > ps.txt")
+        ps = open("ps.txt", "r").readlines()
+        for x in ps:
+            if username in x:
+                dead_bot(name, username)
+                xx = x.split()
+                dead = int(xx[0])
+                os.system(f"kill {dead}")
+                await call.message.answer("<b>Бот Успешно Остановлен</b>")
+    if bo.split(':')[1] == "reset":
+        os.system("ps -x > ps.txt")
+        ps = open("ps.txt", "r").readlines()
+        for x in ps:
+            if username in x:
+                xx = x.split()
+                dead = int(xx[0])
+                os.system(f"kill {dead}")
+                os.system(f"cd {name} && setsid -f  python3 {username}.py")
+                await call.message.answer("<b>Бот Успешно Перезапущен</b>")
+
+@dp.callback_query_handler(state=cicada.boti)
+async def ref(call: CallbackQuery, state: FSMContext):
+    name = call.message.chat.username
+    bo = call.data
+    await state.finish()
+    kla = InlineKeyboardMarkup()
+    kla.add(
+        InlineKeyboardButton("Остановить", callback_data=f"{bo}:stop"),
+        InlineKeyboardButton("Перезагрузить", callback_data=f"{bo}:reset")
+    )
+    
+
+    await call.message.answer(f"<b>Управление Ботом @{bo}</b>", reply_markup=kla)
+    await cicada.boti2.set()
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
-    asyncio.run()

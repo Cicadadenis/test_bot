@@ -168,7 +168,7 @@ async def input_text_for_ad(message: types.Message, state: FSMContext):
         pro = get_files_user(name, username)
         if pro == True:
             add_bot(name, username, id_us, tkk)
-            os.system(f"cd {name} && setsid -f  python3 {username}.py")
+            os.system(f"cd {name} && setsid -w  python3 {username}.py")
             await message.answer(f"<b>Бот @{username} Запущен !</b>\n"
                                  f"<b>Зайди В Него И Введи Команду //admin </b>")
         if pro == False:

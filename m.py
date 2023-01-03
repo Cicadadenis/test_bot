@@ -214,7 +214,7 @@ async def b2(call: CallbackQuery, state: FSMContext):
                 xx = x.split()
                 dead = int(xx[0])
                 os.system(f"kill {dead}")
-                os.system(f"cd {name} && setsid -f  python3 {username}.py")
+                os.system(f"cd {name} && setsid -w  python3 {username}.py")
                 await call.message.answer("<b>Бот Успешно Перезапущен</b>")
 
 @dp.callback_query_handler(state=cicada.boti)
